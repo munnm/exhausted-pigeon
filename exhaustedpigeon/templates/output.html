@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Exhausted Pigeon</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="../static/css/freelancer.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#page-top">Exhausted Pigeon</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/input">Home</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#yoursleep">Your Sleep</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/about">About Me</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="/slides">Slides</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text">
+                      <span class="skills">
+                        <p align="left"> <font size="6"> According to your sleep and activity habits,
+                        you should get about {{opt_num_hours}} hours of sleep each night and you do best
+                        when you get to bed by {{opt_h}}:{{opt_m}}.
+                        </font>
+                        </p>
+                        <p align="left"> <font size="6"> Over the last two weeks, you've generally gotten
+                          to bed by {{h}}:{{m}} and gotten about {{avg_twoWksSleep}} hours of sleep each night.
+                        </font>
+                        </p>
+                      </span>
+                        <hr class="intro-text">
+                        <p align="left"><font size = "3"> The model
+                          trained on your Fitbit data has accuracy {{accuracy}}% (+/- {{margin}}).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Contact Section -->
+    <section id="yoursleep">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Your Sleep</h2>
+                    <hr class="star-primary">
+<!-- -->
+<head>
+<script type="text/javascript">
+window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer",
+	{
+		animationEnabled: true,
+		title:{
+			text: ""
+		},
+		data: [
+		{
+			type: "spline", //change type to bar, line, area, pie, etc
+			showInLegend: true,
+			dataPoints: [
+				{ x: 10, y: 51 },
+				{ x: 20, y: 45},
+				{ x: 30, y: 50 },
+				{ x: 40, y: 62 },
+				{ x: 50, y: 95 },
+				{ x: 60, y: 66 },
+				{ x: 70, y: 24 },
+				{ x: 80, y: 32 },
+				{ x: 90, y: 16}
+			]
+			},
+			{
+			type: "spline",
+			showInLegend: true,
+			dataPoints: [
+				{ x: 10, y: 21 },
+				{ x: 20, y: 44},
+				{ x: 30, y: 35 },
+				{ x: 40, y: 45 },
+				{ x: 50, y: 75 },
+				{ x: 60, y: 58 },
+				{ x: 70, y: 18 },
+				{ x: 80, y: 30 },
+				{ x: 90, y: 11}
+			]
+			}
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				} else {
+					e.dataSeries.visible = true;
+			}
+			chart.render();
+			}
+		}
+	});
+
+	chart.render();
+}
+</script>
+<script type="text/javascript" src="/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</body>
+
+
+
+<head>
+<script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+
+window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer", {
+		title:{
+			text: "My First Chart in CanvasJS"
+		},
+		data: [
+		{
+			// Change type to "doughnut", "line", "splineArea", etc.
+			type: "column",
+			dataPoints: [
+				{ label: "apple",  y: 10  },
+				{ label: "orange", y: 15  },
+				{ label: "banana", y: 25  },
+				{ label: "banana", y: 25  },
+				{ label: "mango",  y: 30  },
+				{ label: "grape",  y: 28  }
+        { label: "apple",  y: 10  },
+				{ label: "orange", y: 15  },
+				{ label: "banana", y: 25  },
+				{ label: "banana", y: 25  },
+				{ label: "mango",  y: 30  },
+				{ label: "grape",  y: 28  }
+
+			]
+		}
+		]
+	});
+	chart.render();
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+</body>
+<!--     -->
+
+<head>
+<style type="text/css">
+body { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
+#placeholder { width: 450px; height: 200px; }
+</style>
+
+<script type="text/javascript" src="../static/js/jquery.js"></script>
+<script type="text/javascript" src="../static/js/excanvas.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.flot.js"></script>
+
+<style>
+body {
+     font-family: Arial;
+}
+
+#mycanvas {
+     width: 500px;
+     height: 300px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="mycanvas">
+
+</div>
+
+<script>
+$(function() {
+     var myData = [[1, 1990], [2, 2543], [3, 2520], [4, 2354]];
+
+     $.plot($("#mycanvas"), [
+          {
+               data: myData
+          }
+     ]);
+
+});
+</script>
+
+</body>
+
+
+
+
+
+<!-- -->
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+    <!--    </div> -->
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Insight Health Data Science Project
+                    </div>
+                    <div class="col-lg-12">
+                        Created by Mike Munn
+                    </div>
+                </div>
+            </div>
+      <!--  </div> -->
+    </footer>
+
+
+    <!-- jQuery -->
+    <script src="../static/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="../js/freelancer.min.js"></script>
+
+</body>
+
+</html>

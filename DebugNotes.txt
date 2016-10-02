@@ -1,0 +1,129 @@
+
+##################################################
+"""Step 1: Return the URL the user needs to go to in order to grant us
+        authorization to look at their data.  Then redirect the user to that
+        URL, open their browser to it, or tell them to copy the URL into their
+        browser.
+            - scope: pemissions that that are being requested [default ask all]
+            - redirect_uri: url to which the reponse will posted
+                            required only if your app does not have one
+            for more info see https://wiki.fitbit.com/display/API/OAuth+2.0
+        """
+
+
+from requests_oauthlib import OAuth2, OAuth2Session
+import requests 
+import fitbit
+import oauth
+
+from requests.auth import HTTPBasicAuth
+
+
+AUTHORIZE_ENDPOINT = "https://www.fitbit.com"
+API_ENDPOINT = "https://api.fitbit.com"
+
+authorization_url = "%s/oauth2/authorize" % AUTHORIZE_ENDPOINT
+request_token_url = "%s/oauth2/token" % API_ENDPOINT
+
+refresh_token_url = request_token_url
+access_token_url = request_token_url
+
+
+client_id = '227ZHG'
+client_secret = '685a6a8d94213e2f3e5542464be43622'
+
+redirect_uri = 'http://www.exhaustedpigeon.xyz/output'
+
+
+
+oauth = OAuth2Session(client_id)
+oauth.redirect_uri = redirect_uri
+oauth.scope = [
+                "activity", "nutrition", "heartrate", "location", "nutrition",
+                "profile", "settings", "sleep", "social", "weight"
+            ]
+            
+url,_ = oauth.authorization_url(authorization_url)
+
+""""""""""""""""""""
+""" THEN USE VIEWS.PY TO DIRECT THE USER'S BROWSER TO THE URL
+""" THEN WITH VIEWS COLLECT THE CODE FROM THE URL WITH 
+"""       code = request.args.get('code')
+""""""""""""""""""""
+
+
+"""Step 2: Given the code from fitbit from step 1, call
+    fitbit again and returns an access token object. Extract the needed
+    information from that and save it to use in future API calls.
+    the token is internally saved
+    """
+
+
+code = "e80f099a38ca0d9c751be598476f4a5fbb4f9181"
+
+AUTHORIZE_ENDPOINT = "https://www.fitbit.com"
+API_ENDPOINT = "https://api.fitbit.com"
+
+authorization_url = "%s/oauth2/authorize" % AUTHORIZE_ENDPOINT
+request_token_url = "%s/oauth2/token" % API_ENDPOINT
+
+refresh_token_url = request_token_url
+access_token_url = request_token_url
+
+
+client_id = "227ZHG"
+client_secret = "685a6a8d94213e2f3e5542464be43622"
+
+redirect_uri = "http://www.exhaustedpigeon.xyz/output"
+
+auth = OAuth2Session(client_id, redirect_uri=redirect_uri)
+
+token = auth.fetch_token(
+      access_token_url,
+      username=client_id,
+      password=client_secret,
+      code=code)
+
+
+
+
+
+    
+"""Step 3: obtains a new access_token from the the refresh token
+        obtained in step 2.
+        the token is internally saved
+"""
+
+      
+token = oauth.refresh_token(
+        refresh_token_url,
+        refresh_token=token['refresh_token'],
+            auth=requests.auth.HTTPBasicAuth(client_id, client_secret)
+        )
+
+matchedACCESS_TOKEN = token['access_token']
+matchedREFRESH_TOKEN = token['refresh_token']
+
+
+"""""""""""""""""""""" PASS THESE TO THE SLEEP_REC FUNCTION INSIDE SLEEP.PY """"""""""""""""""""""
+
+Client_ID = client_id 
+Client_Secret = '685a6a8d94213e2f3e5542464be43622'
+
+
+
+""""""""""""""""""""
+""" THEN YOU CAN ACCESS THE API 
+""" 
+""""""""""""""""""""
+
+authd_client = fitbit.Fitbit(Client_ID, Client_Secret, access_token = matchedACCESS_TOKEN, refresh_token = matchedREFRESH_TOKEN)
+
+
+authd_client.sleep()
+    
+    
+    
+    
+    
+    
