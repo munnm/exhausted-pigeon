@@ -48,8 +48,8 @@ def app_input():
     refresh_token_url = request_token_url
     access_token_url = request_token_url
 
-    client_id = '227ZHG'
-    client_secret = '685a6a8d94213e2f3e5542464be43622'
+    client_id = '********'                      # This is your client_id for the fitbit app
+    client_secret = '********'                  # This is your client_secret for the fitbit app
 
     redirect_uri = 'http://www.exhaustedpigeon.xyz/output'
 
