@@ -1,6 +1,6 @@
 ## 'Insight Project: 
 ### Fitbit Sleep and Mixed Effects Models'
-#### date: "Spring 2016"
+#### Spring 2016
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
