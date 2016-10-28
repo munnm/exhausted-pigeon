@@ -1,14 +1,12 @@
 import pandas as pd
 import numpy as np
 
-#import matplotlib.pyplot as plt   #keep this for plots
+#import matplotlib.pyplot as plt   #useful for plots
+#import matplotlib.dates as md     #useful for plots
 
 import datetime, dateutil.parser
-#import matplotlib.dates as md     #keep this for plots
 import dateutil
 import time
-
-from from_full_df import accuracy
 
 import fitbit
 import os
@@ -19,16 +17,8 @@ import datetime
 import pandas as pd
 import numpy as np
 
-#import matplotlib.pyplot as plt   #keep this for plots
-
-import datetime, dateutil.parser
-#import matplotlib.dates as md     #keep this for plots
-import dateutil
-import time
-
-
 import fitbit
-import os
+import os       #this was needed when using gather_keys on my machine
 import re
 from IPython.utils import io
 import datetime
@@ -40,7 +30,6 @@ from sklearn import linear_model, datasets
 from sklearn import preprocessing
 import statsmodels.api as sm
 
-from patsy import dmatrices
 from sklearn.cross_validation import train_test_split
 from sklearn.cross_validation import cross_val_score
 from sklearn import metrics
@@ -64,9 +53,12 @@ from sklearn.cross_validation import KFold
 
 
 def sleep_rec(user):
-    Client_ID = '227ZHG'
-    Client_Secret = '685a6a8d94213e2f3e5542464be43622'
-
+    Client_ID = '****'
+    Client_Secret = '****'
+    
+    ################################################################################################################
+    #This code was used when connecting to the API on my machine. Made irrelevant when accessing Fitbit from AWS
+    ################################################################################################################
     #captured_output = os.popen("python ~/Dropbox/DS/InsightHealthDS/fitbit/python-fitbit/gather_keys_oauth2.py 227ZHG 685a6a8d94213e2f3e5542464be43622").read()
     #gather_keys_output = str(captured_output)
 
@@ -80,10 +72,10 @@ def sleep_rec(user):
     #set up the authenticated user data
     #authd_client = fitbit.Fitbit(Client_ID, Client_Secret, access_token = matchedACCESS_TOKEN, refresh_token = matchedREFRESH_TOKEN)
 
-    #collect user's data for the last -- days
-    #-------------------------------------------------
-    #---------THIS ACCESS THE FITBIT API--------------
-    #-------------------------------------------------
+    #collect user's data for the last 75 days
+    ################################################################################################################
+    #---------THIS ACCESSES THE FITBIT API--------------
+    ################################################################################################################
     #start with an empty list
     user_sleep_data = []
     user_activities_data = []
@@ -102,8 +94,7 @@ def sleep_rec(user):
     for i in range(0, numdays):
         user_activities_data.append(authd_client.activities(date = date_list[i]))
 
-
-    #now clean it up
+    #now clean the data
     #start with the sleep info
     user_sleep_startTime = []
     user_sleep_minutesAsleep = []
@@ -127,7 +118,6 @@ def sleep_rec(user):
         if len(user_sleep_data[i]['sleep']) > 0:
             user_sleep_restlessDuration.append(user_sleep_data[i]['sleep'][0]['restlessDuration'])
         else: user_sleep_restlessDuration.append(np.NaN)
-
 
     #make date just year-month-day
     user_sleep_date = []
@@ -230,9 +220,9 @@ def sleep_rec(user):
     activities_df = activities_df.set_index(['date'])
 
 
-    ##################################################
-    #join sleep_df and activities_df to get full_df of measurements
-    ##################################################
+    ################################################################################################################
+    #################         join sleep_df and activities_df to get full_df of measurements
+    ################################################################################################################
 
     full_df = pd.concat([sleep_df, activities_df], axis=1)
 
@@ -289,23 +279,22 @@ def sleep_rec(user):
     df['StartTimeMinutesAsleep'] = df['minutesAsleep'] * df['minuteStartTime']
 
 
-    ################
-    ### Normalize everything
-    ################
-    ###########################
-    #One-hot encoding for weekday
-    ###########################
-    #weekday_coded = pd.get_dummies(df.weekday)
-    #df = pd.concat([weekday_coded, df], axis = 1)
+    ################################################################################################################
+    ### One-hot encoding for weekday
+    ################################################################################################################
+    weekday_coded = pd.get_dummies(df.weekday)
+    df = pd.concat([weekday_coded, df], axis = 1)
 
-    #df['weekend'] = df[5] + df[6]
+    df['weekend'] = df[5] + df[6]
 
-    ###########################
-    #just look at weekdays
-    ###########################
-    #df = df.loc[df['weekend']!=1]
+    ################################################################################################################
+    ### just look at weekdays
+    ################################################################################################################
+    df = df.loc[df['weekend']!=1]
 
-
+    ################################################################################################################
+    ### Normalize features for logistic regression
+    ################################################################################################################
     scaler = preprocessing.StandardScaler()
 
     scaled_df = df
@@ -319,7 +308,9 @@ def sleep_rec(user):
     scaled_df['StartTime2'] = scaler.fit_transform(scaled_df[['StartTime2']])
     scaled_df['StartTimeMinutesAsleep'] = scaler.fit_transform(scaled_df[['StartTimeMinutesAsleep']])
 
+    ################################################################################################################
     #### include yesterday's sleepTime
+    ################################################################################################################
     #yesterday's sleepTime
     yesterday_StartTime = []
     for i in range(len(df)-1):
@@ -347,9 +338,9 @@ def sleep_rec(user):
     selector = RFE(lin_reg, 5, step = 1)
     selector.fit(X,y)
 
-    #################################
+    ################################################################################################################
     ###   Do grid search to determine optimal parameter alpha in Ridge Regression
-    #################################
+    ################################################################################################################
 
     '''
     # prepare a range of alpha values to test
@@ -364,9 +355,9 @@ def sleep_rec(user):
     grid_alpha = grid.best_estimator_.alpha
     '''
 
-    #################################
+    ################################################################################################################
     ###   Use Reverse Feature Elimination to determine most relevant features
-    #################################
+    ################################################################################################################
     # use linear regression as the model
     lin_reg = LinearRegression()
     #rank all features, i.e continue the elimination until the last one
@@ -378,70 +369,41 @@ def sleep_rec(user):
 
     features = names[selector.support_]
 
-    ##################
+    ################################################################################################################
     ## Now compute the logistic regression using these features
-    ##################
+    ################################################################################################################
     X = X[features]   ## Now make X contain just the most relevant features
 
     y = scaled_df[['step_goal']]
     y = np.ravel(y)
 
     model_log = LogisticRegression()
-
-
-    ##################
+    
+    ################################################################################################################
     ## use grid.search to find the best constant for regularization
-    ##################
-
+    ################################################################################################################
     c_range = [.001, .01, .1, 1, 10, 100]
     dict(C=c_range)
 
     model_log = grid_search.GridSearchCV(estimator=model_log, param_grid=dict(C=c_range))
-
     model_log.fit(X,y)
-
     best_c = model_log.best_params_['C']
 
     best_model_log = LogisticRegression(C = best_c)
 
-    #print("Best parameters set found on development set:")
-    #print()
-    #print(model_log.best_params_)
-    #print()
-    #print("Grid scores on development set:")
-    #print()
-    #for params, mean_score, scores in model_log.grid_scores_:
-    #    print("%0.3f (+/-%0.03f) for %r"
-    #              % (mean_score, scores.std() * 2, params))
-
-    ##################
+    ################################################################################################################
     ## Now compute the K-fold CV to determine accuracy
-    ##################
+    ################################################################################################################
     kf_total = KFold(len(X), n_folds=5, shuffle=True, random_state=4)
 
     scores = cross_val_score(best_model_log, X, y, cv=kf_total, n_jobs = 1)
 
-
-    '''
-    model_log = LogisticRegression()
-
-    from sklearn.cross_validation import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-
-    X_train.shape, y_train.shape
-    #((90, 4), (90,))
-    X_test.shape, y_test.shape
-    #((60, 4), (60,))
-
-    model_log = model_log.fit(X, y)
-    #clf.score(X_test, y_test)
-    #0.96...
-    '''
     accuracy = round(scores.mean()*100, 2)
     margin = round(1.96*scores.std()*10**(0.5),2)
 
-    # find the optimal sleep duration
-
+    ################################################################################################################
+    # find the optimal sleep duration for the sleep recommendation
+    ################################################################################################################
     df = full_df
     df = df[['weekday', 'minuteStartTime', 'minutesAsleep', 'steps', 'caloriesOut', 'activityCalories']]
 
@@ -453,7 +415,7 @@ def sleep_rec(user):
 
 
     #add in a step goal
-    step_goal = 1.3*df.steps.mean()
+    step_goal = 1.2*df.steps.mean()
 
     user_step_goal = []
     for i in range(len(df)):
@@ -461,16 +423,15 @@ def sleep_rec(user):
         else: user_step_goal.append(0)
     df['step_goal'] = user_step_goal
 
-
     good_df = df.loc[df['step_goal'] == 1]
     good_df = good_df.loc[good_df['minutesAsleep'] > 360]
-
 
     good_df.minutesAsleep.mean()
     opt_num_hours = round(good_df.minutesAsleep.mean()/60, 2)
 
-    # find the optimal sleep time
-
+    ################################################################################################################
+    # find the optimal sleep time for the sleep recommendation
+    ################################################################################################################
     good_df = good_df.loc[good_df['minuteStartTime'] > 480]
     opt_minuteStartTime = good_df.minuteStartTime.mean()
 
@@ -480,21 +441,19 @@ def sleep_rec(user):
     opt_h, opt_m = divmod(opt_m, 60)
 
 
-    ##################################################
+    ################################################################################################################
     # Conclusion
-    ##################################################
-
-
+    ################################################################################################################
+    #this print statement isnt needed anymore. It is passed to the result.html page
     #print "\n\nWith %r%% accuracy, you should get at least %r hours of sleep a night" % (accuracy, opt_num_hours)
     #print "\t\t\t and you do best when you're in bed by %d:%02d:%02d." % (opt_h, opt_m, opt_s)
 
-    ##################################################
+    ################################################################################################################
     # compare with past two weeks
-    ##################################################
-
+    ################################################################################################################
+    # collect last two weeks data
     two_wks_df = df[0:15]
     avg_twoWksSleep = round(two_wks_df.minutesAsleep.mean()/60,2)
-
 
     two_wks_df = two_wks_df[two_wks_df['minuteStartTime'] > 480]
     num_minuteStartTime = two_wks_df.minuteStartTime.mean()
@@ -503,7 +462,8 @@ def sleep_rec(user):
 
     m, s = divmod(seconds, 60)
     h, m = divmod(m, 60)
-
+    
+    #this print statement isnt needed anymore. It is passed to the result.html page
     #print "Over the last two weeks, you generally got about %r hours of sleep each night" % (avg_twoWksSleep)
     #print "\t and you were in bed by %d:%02d:%02d.\n" % (h,m,s)
 
