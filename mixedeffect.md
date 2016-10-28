@@ -1,16 +1,13 @@
-## 'Insight Project: 
-### Fitbit Sleep and Mixed Effects Models'
+## Insight Project
+### Fitbit Sleep and Mixed Effects Models
 #### Spring 2016
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ### Introduction
 
 We would like to examine if there is a reasonable justification for examining how sleep and activity are related. To do this, we have collected a much data as possible from as many subjects as possible and will use mixed effect modeling to examine how strong this relationship is across the population.
 
-We have collected data from 11 subjects. For each user, we have access to 75 days worth of sleep and activity data (note: if there are missing days for a given user, then there we will have fewer observations; i.e. we do not know what the API contains until after accessing it). Therefore, there will be multiple responses for each user and should not be regarded as independent events. Furthermore, each person should be expected to have different sleep habits which will affect all data points for that subject. Therefore, these different responses will be inter-dependent rather than independent. To address this we add a **random effect** for each subject; that is, we resolve this non-independence by assuming a 'baseline' sleep pattern for each user. This is the basis of the 'mixed-effects model'. Here the 'fixed effects' are meant to be the features of sleep, and the `mixed-effect' is the subject. 
+We have collected data from 11 subjects. For each user, we have access to 75 days worth of sleep and activity data (note: if there are missing days for a given user, then there we will have fewer observations; i.e. we do not know what the API contains until after accessing it). Therefore, there will be multiple responses for each user and should not be regarded as independent events. Furthermore, each person should be expected to have different sleep habits which will affect all data points for that subject. Therefore, these different responses will be inter-dependent rather than independent. To address this we add a **random effect** for each subject; that is, we resolve this non-independence by assuming a 'baseline' sleep pattern for each user. This is the basis of the 'mixed-effects model'. Here the 'fixed effects' are meant to be the features of sleep, and the 'mixed-effect' is the subject. 
 
 Loosely, the model we consider takes the following form 
 
