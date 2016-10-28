@@ -1,10 +1,6 @@
----
-title: 'Insight Project: 
-Fitbit Sleep and Mixed Effects Models'
-author: "M.Munn"
-date: "Spring 2016"
-output: html_document
----
+## 'Insight Project: 
+### Fitbit Sleep and Mixed Effects Models'
+#### date: "Spring 2016"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
