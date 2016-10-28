@@ -1,3 +1,4 @@
+#This is the structure of the sleep recommendation. Ultimately it is used in the result.html page
 def recommendation(a,b,c,d,e,f,g,h,i):
     sentence = "With %r%% accuracy, you should get at least %r hours of sleep a night \n" \
         " and you do best when you're in bed by %r:%r:%r. \n" \
